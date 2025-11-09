@@ -88,8 +88,9 @@ const NavBar = () => {
                         {links}
                     </ul>
                 </div>
-                <div className="navbar-end ">
-                   
+                <div className="navbar-end gap-2">
+                  <button className="btn btn-success"><span className='text-white'>Login</span></button>
+                  <button className="btn btn-success"><span className='text-white'>Register</span></button>
                 </div>
             </div>
         </div>

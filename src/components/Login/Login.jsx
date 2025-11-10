@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-
+import { signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
+import { auth, googleProvider } from '../../Firebase/config';
 const Login = ({ onClose, onSwitchToRegister }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -10,17 +11,25 @@ const Login = ({ onClose, onSwitchToRegister }) => {
     e.preventDefault();
     setLoading(true);
     setError('');
-    console.log('Email Login Attempt:', { email, password });
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      onClose(); 
+    } catch (err) {
+      setError(err.message); 
+    }
     setLoading(false);
-    onClose();
   };
 
   const handleGoogleLogin = async () => {
     setLoading(true);
     setError('');
-    console.log('Google Login Attempt');
+    try {
+      await signInWithPopup(auth, googleProvider);
+      onClose();
+    } catch (err) {
+      setError(err.message);
+    }
     setLoading(false);
-    onClose();
   };
 
   const switchToRegister = () => {

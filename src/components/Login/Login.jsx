@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import { signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
 import { auth, googleProvider } from '../../Firebase/config';
+import { useAuth } from '../../context/AuthContext';
+
 const Login = ({ onClose, onSwitchToRegister }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const { setShowLogin } = useAuth();
 
   const handleEmailLogin = async (e) => {
     e.preventDefault();
@@ -14,6 +17,7 @@ const Login = ({ onClose, onSwitchToRegister }) => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
       onClose(); 
+      setShowLogin(false);
     } catch (err) {
       setError(err.message); 
     }
@@ -26,6 +30,7 @@ const Login = ({ onClose, onSwitchToRegister }) => {
     try {
       await signInWithPopup(auth, googleProvider);
       onClose();
+      setShowLogin(false);
     } catch (err) {
       setError(err.message);
     }
@@ -34,6 +39,7 @@ const Login = ({ onClose, onSwitchToRegister }) => {
 
   const switchToRegister = () => {
     onClose();
+    setShowLogin(false);
     if (onSwitchToRegister) onSwitchToRegister();
   };
 

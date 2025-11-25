@@ -4,7 +4,7 @@ const Topcategories = () => {
   const [cars, setCars] = useState([]);
 
   useEffect(() => {
-    fetch('http://localhost:3000/cars')
+    fetch('https://travel-ease-server-self.vercel.app/cars')
       .then((res) => res.json())
       .then((data) => {
         const customOrder = ["SUV", "Electric", "Van", "Sedan"];

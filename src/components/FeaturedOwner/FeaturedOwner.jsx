@@ -4,7 +4,7 @@ const FeaturedOwner = () => {
   const [cars, setCars] = useState([]);
 
   useEffect(() => {
-    fetch('http://localhost:3000/cars?limit=6')
+    fetch('https://travel-ease-server-self.vercel.app/cars?limit=6o')
       .then((res) => res.json())
       .then((data) => setCars(data))
       .catch((error) => console.error("Error fetching featured cars:", error));

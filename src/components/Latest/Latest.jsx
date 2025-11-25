@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 const Dynamic = () => {
   const [vehicles, setVehicles] = useState([]);
   useEffect(() => {
-    fetch('http://localhost:3000/cars?limit=6')
+    fetch('https://travel-ease-server-self.vercel.app/cars?limit=6')
       .then(res => res.json())
       .then(data => setVehicles(data))
       .catch(error => console.error("Error fetching cars:", error));

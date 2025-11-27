@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 const FeaturedOwner = () => {
   const [cars, setCars] = useState([]);
@@ -43,7 +44,10 @@ const FeaturedOwner = () => {
                     ${vehicle.pricePerDay}/day
                   </span>
                   <div className="card-actions">
-                    <button className="btn btn-success text-white">View Details</button>
+                    <Link to={`/vehicle/${vehicle._id}`} className="block w-full">
+                     <button className="btn btn-success text-white">View Details</button>
+                    </Link>
+                   
                   </div>
                 </div>
               </div>

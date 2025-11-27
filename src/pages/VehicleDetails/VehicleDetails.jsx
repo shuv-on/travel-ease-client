@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { motion } from 'framer-motion'; // FIXED: Import motion
+import { useSpring, animated } from 'react-spring'; // FIXED: Import React Spring
+import { format } from 'date-fns'; // FIXED: Import date-fns
 import Swal from 'sweetalert2';
 import { useAuth } from '../../context/AuthContext'; 
 
@@ -9,8 +12,8 @@ const VehicleDetails = () => {
     const [car, setCar] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null); 
+    const [isBooking, setIsBooking] = useState(false);
 
-  
     useEffect(() => {
         fetch(`https://travel-ease-server-self.vercel.app/cars/${id}`)
             .then(res => {
@@ -41,6 +44,8 @@ const VehicleDetails = () => {
             return;
         }
 
+        setIsBooking(true);
+
         const bookingData = {
             vehicleId: car._id,
             vehicleName: car.vehicleName,
@@ -65,15 +70,25 @@ const VehicleDetails = () => {
             if (data.insertedId) {
                 Swal.fire({
                     title: 'Booking Confirmed!',
-                    text: 'Your ride request has been submitted successfully.',
+                    text: `Your ride request has been submitted successfully on ${format(new Date(bookingData.bookingDate), 'MMMM dd, yyyy')}.`, // Date-fns use
                     icon: 'success',
                     confirmButtonText: 'Great!',
                     confirmButtonColor: '#3085d6'
+                });
+                // Optional: setIsBooking(false); if you want to re-enable
+            } else {
+                setIsBooking(false);
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Booking failed. Please try again.',
+                    icon: 'error',
+                    confirmButtonText: 'Close'
                 });
             }
         })
         .catch(error => {
             console.error("Booking Error:", error);
+            setIsBooking(false);
             Swal.fire({
                 title: 'Error!',
                 text: 'Something went wrong. Please try again.',
@@ -83,6 +98,13 @@ const VehicleDetails = () => {
         });
     };
 
+    // React Spring for button animation
+    const springProps = useSpring({
+        from: { scale: 1 },
+        to: { scale: 1 },
+        config: { tension: 220, friction: 30 },
+    });
+
     if (loading) {
         return (
             <div className="flex justify-center items-center min-h-screen">
@@ -91,11 +113,9 @@ const VehicleDetails = () => {
         );
     }
 
-    
     if (error) {
         return <div className="text-center text-red-500 text-2xl mt-10">Error: {error}</div>;
     }
-
 
     if (!car) {
         return <div className="text-center text-2xl mt-10">Vehicle not found!</div>;
@@ -104,13 +124,18 @@ const VehicleDetails = () => {
     return (
         <div className="bg-base-200 min-h-screen py-10">
             <div className="container mx-auto px-4">
-                <div className="card lg:card-side bg-base-100 shadow-2xl overflow-hidden">
+                {/* Framer Motion for card */}
+                <motion.div 
+                    className="card lg:card-side bg-base-100 shadow-2xl overflow-hidden"
+                    initial={{ opacity: 0, y: 50 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, ease: "easeOut" }}
+                >
                     <figure className="lg:w-1/2 relative">
                         <img 
                             src={car.coverImage} 
                             className="w-full h-full object-cover min-h-[400px]" 
                         />
-                        
                     </figure>
                     <div className="card-body lg:w-1/2 p-8 lg:p-12">
                         <h2 className="card-title text-4xl font-bold mb-2">{car.vehicleName}</h2>
@@ -131,15 +156,29 @@ const VehicleDetails = () => {
                             </div>
                         </div>
                         <div className="card-actions justify-end mt-auto">
-                            <button 
+                            {/* React Spring animated button */}
+                            <animated.button 
                                 onClick={handleBooking}
-                                className="btn btn-primary btn-lg bg-green-500 border-0 w-full text-white shadow-lg hover:shadow-primary/50 transition-all duration-300 transform hover:-translate-y-1"
+                                disabled={isBooking}
+                                style={{ 
+                                    scale: isBooking ? 1 : springProps.scale,
+                                }}
+                                className={`btn btn-primary btn-lg w-full text-white shadow-lg transition-all duration-300 ${isBooking ? 'bg-green-700 cursor-not-allowed' : 'bg-green-500 border-0'}`}
+                                onMouseEnter={() => springProps.scale.set(1.05)}
+                                onMouseLeave={() => springProps.scale.set(1)}
                             >
-                                Book This Ride Now
-                            </button>
+                                {isBooking ? (
+                                    <span className="flex items-center justify-center">
+                                        <span className=" mr-2"></span>
+                                        Booked...
+                                    </span>
+                                ) : (
+                                    'Book This Ride Now'
+                                )}
+                            </animated.button>
                         </div>
                     </div>
-                </div>
+                </motion.div>
             </div>
         </div>
     );

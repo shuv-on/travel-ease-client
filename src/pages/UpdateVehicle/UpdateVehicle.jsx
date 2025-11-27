@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import Swal from 'sweetalert2';
 import axios from 'axios';
+import Swal from 'sweetalert2';
 
-const AddVehicles = () => {
+const UpdateVehicle = () => {
+    const { id } = useParams();
     const { user } = useAuth();
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         vehicleName: '',
         ownerName: '',
@@ -13,10 +16,35 @@ const AddVehicles = () => {
         location: '',
         availability: true,
         description: '',
-        coverImage: '', 
-        userEmail: user?.email || '' 
+        coverImage: '',
+        userEmail: user?.email || ''
     });
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [submitLoading, setSubmitLoading] = useState(false);
+
+    useEffect(() => {
+        if (!id || !user) {
+            navigate('/myvehicles');
+            return;
+        }
+
+        axios.get(`https://travel-ease-server-self.vercel.app/cars/${id}`)
+            .then(res => {
+                if (res.data.userEmail !== user.email) {
+                    Swal.fire('Access Denied', 'You can only update your own vehicles.', 'error');
+                    navigate('/myvehicles');
+                    return;
+                }
+                setFormData(res.data);
+                setLoading(false);
+            })
+            .catch(err => {
+                console.error("Error fetching vehicle:", err);
+                Swal.fire('Error!', 'Failed to load vehicle data.', 'error');
+                navigate('/myvehicles');
+                setLoading(false);
+            });
+    }, [id, user, navigate]);
 
     const handleInputChange = (e) => {
         const { name, value, type, checked } = e.target;
@@ -29,60 +57,45 @@ const AddVehicles = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!user) {
-            Swal.fire({
-                title: 'Login Required',
-                text: 'Please log in to add a vehicle.',
-                icon: 'warning',
-                confirmButtonText: 'OK'
-            });
+            Swal.fire('Login Required', 'Please log in to update vehicle.', 'warning');
             return;
         }
 
-        setLoading(true);
+        setSubmitLoading(true);
         try {
-            const response = await axios.post('https://travel-ease-server-self.vercel.app/cars', formData);
-            if (response.data.insertedId) {
+            const response = await axios.put(`https://travel-ease-server-self.vercel.app/cars/${id}`, formData);
+            if (response.data.matchedCount > 0) {
                 Swal.fire({
                     title: 'Success!',
-                    text: 'Vehicle added successfully!',
+                    text: 'Vehicle updated successfully!',
                     icon: 'success',
-                    confirmButtonText: 'Great!'
+                    confirmButtonText: 'OK'
                 });
-                // Reset form
-                setFormData({
-                    vehicleName: '',
-                    ownerName: '',
-                    category: '',
-                    pricePerDay: '',
-                    location: '',
-                    availability: true,
-                    description: '',
-                    coverImage: '',
-                    userEmail: user.email
-                });
+                navigate('/myvehicles'); 
             }
         } catch (error) {
-            console.error("Error adding vehicle:", error);
-            Swal.fire({
-                title: 'Error!',
-                text: 'Failed to add vehicle. Please try again.',
-                icon: 'error',
-                confirmButtonText: 'Close'
-            });
+            console.error("Error updating vehicle:", error);
+            Swal.fire('Error!', 'Failed to update vehicle. Please try again.', 'error');
         } finally {
-            setLoading(false);
+            setSubmitLoading(false);
         }
     };
 
+    if (loading) {
+        return (
+            <div className="flex justify-center items-center min-h-screen">
+                <span className="loading loading-spinner loading-lg text-primary"></span>
+            </div>
+        );
+    }
+
     return (
         <div className="container mx-auto px-4 py-10">
-            <h2 className="text-3xl font-bold text-center mb-8">Add New Vehicle</h2>
+            <h2 className="text-3xl font-bold text-center mb-8">Update Vehicle</h2>
             <form onSubmit={handleSubmit} className="max-w-md mx-auto bg-base-100 p-6 rounded-lg shadow-xl">
                 {/* Vehicle Name */}
                 <div className="form-control mb-4">
-                    <label className="label">
-                        <span className="label-text">Vehicle Name</span>
-                    </label>
+                    <label className="label"><span className="label-text">Vehicle Name</span></label>
                     <input
                         type="text"
                         name="vehicleName"
@@ -95,9 +108,7 @@ const AddVehicles = () => {
 
                 {/* Owner Name */}
                 <div className="form-control mb-4">
-                    <label className="label">
-                        <span className="label-text">Owner Name</span>
-                    </label>
+                    <label className="label"><span className="label-text">Owner Name</span></label>
                     <input
                         type="text"
                         name="ownerName"
@@ -110,9 +121,7 @@ const AddVehicles = () => {
 
                 {/* Category */}
                 <div className="form-control mb-4">
-                    <label className="label">
-                        <span className="label-text">Category</span>
-                    </label>
+                    <label className="label"><span className="label-text">Category</span></label>
                     <select
                         name="category"
                         value={formData.category}
@@ -131,9 +140,7 @@ const AddVehicles = () => {
 
                 {/* Price Per Day */}
                 <div className="form-control mb-4">
-                    <label className="label">
-                        <span className="label-text">Price Per Day ($)</span>
-                    </label>
+                    <label className="label"><span className="label-text">Price Per Day ($)</span></label>
                     <input
                         type="number"
                         name="pricePerDay"
@@ -146,9 +153,7 @@ const AddVehicles = () => {
 
                 {/* Location */}
                 <div className="form-control mb-4">
-                    <label className="label">
-                        <span className="label-text">Location</span>
-                    </label>
+                    <label className="label"><span className="label-text">Location</span></label>
                     <input
                         type="text"
                         name="location"
@@ -159,7 +164,7 @@ const AddVehicles = () => {
                     />
                 </div>
 
-                {/* Availabilty */}
+                {/* Availability */}
                 <div className="form-control mb-4">
                     <label className="label cursor-pointer">
                         <span className="label-text">Available</span>
@@ -175,9 +180,7 @@ const AddVehicles = () => {
 
                 {/* Description */}
                 <div className="form-control mb-4">
-                    <label className="label">
-                        <span className="label-text">Description</span>
-                    </label>
+                    <label className="label"><span className="label-text">Description</span></label>
                     <textarea
                         name="description"
                         value={formData.description}
@@ -190,9 +193,7 @@ const AddVehicles = () => {
 
                 {/* Cover Image URL */}
                 <div className="form-control mb-4">
-                    <label className="label">
-                        <span className="label-text">Cover Image URL</span>
-                    </label>
+                    <label className="label"><span className="label-text">Cover Image URL</span></label>
                     <input
                         type="url"
                         name="coverImage"
@@ -204,11 +205,9 @@ const AddVehicles = () => {
                     />
                 </div>
 
-                {/* User Email (Read-only) */}
+                {/* User Email*/}
                 <div className="form-control mb-6">
-                    <label className="label">
-                        <span className="label-text">User Email</span>
-                    </label>
+                    <label className="label"><span className="label-text">User Email</span></label>
                     <input
                         type="email"
                         value={formData.userEmail}
@@ -220,13 +219,13 @@ const AddVehicles = () => {
                 {/* Submit Button */}
                 <button
                     type="submit"
-                    disabled={loading}
+                    disabled={submitLoading}
                     className="btn btn-primary bg-green-500 border-0 w-full"
                 >
-                    {loading ? (
+                    {submitLoading ? (
                         <span className="loading loading-spinner"></span>
                     ) : (
-                        'Add Vehicle'
+                        'Update Vehicle'
                     )}
                 </button>
             </form>
@@ -234,4 +233,4 @@ const AddVehicles = () => {
     );
 };
 
-export default AddVehicles;
+export default UpdateVehicle;

@@ -7,6 +7,7 @@ import AddVehicles from "../pages/AddVehicles/AddVehicles";
 import MyVehicles from "../pages/MyVehicles/MyVehicles";
 import MyBookings from "../pages/MyBookings/MyBookings";
 import VehicleDetails from "../pages/VehicleDetails/VehicleDetails";
+import UpdateVehicle from "../pages/UpdateVehicle/UpdateVehicle";
 import { useAuth } from "../context/AuthContext";
 import React, { useEffect } from "react";
 
@@ -16,9 +17,9 @@ const ProtectedRoute = ({ children }) => {
 
   useEffect(() => {
     if (!loading && !user) {
-      openLoginModal();
+      openLoginModal(location); 
     }
-  }, [user, loading, openLoginModal]);
+  }, [user, loading, openLoginModal, location]);
 
   if (loading) {
     return (
@@ -80,16 +81,24 @@ export const router = createBrowserRouter([
       },
       {
         path: "/vehicle/:id",
-        element:(
-         <ProtectedRoute>
-          <VehicleDetails></VehicleDetails>
+        element: (
+          <ProtectedRoute>
+            <VehicleDetails />
           </ProtectedRoute>
-          ),
+        ),
       },
-            {
+      {
+        path: "/update-vehicle/:id",
+        element: (
+          <ProtectedRoute>
+            <UpdateVehicle />
+          </ProtectedRoute>
+        ),
+      },
+      {
         path: "*",
         element: <ErrorPage />,
-      }
-    ]
-  }
+      },
+    ],
+  },
 ]);

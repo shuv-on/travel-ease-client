@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 
 const Topcategories = () => {
   const [cars, setCars] = useState([]);
 
   useEffect(() => {
-    fetch('https://travel-ease-server-self.vercel.app/cars')
-      .then((res) => res.json())
-      .then((data) => {
+    axios.get('https://travel-ease-server-self.vercel.app/cars')
+      .then((res) => {
         const customOrder = ["SUV", "Electric", "Van", "Sedan"];
-        const sortedData = data
+        const sortedData = res.data
           .filter(car => customOrder.includes(car.category))
-
           .sort((a, b) => {
             const indexA = customOrder.indexOf(a.category);
             const indexB = customOrder.indexOf(b.category);

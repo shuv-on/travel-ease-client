@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-
+import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 const AllVehicles = () => {
     const [cars, setCars] = useState([]); 
@@ -10,15 +11,19 @@ const AllVehicles = () => {
     const [sortOrder, setSortOrder] = useState("");
 
     useEffect(() => {
-        fetch('https://travel-ease-server-self.vercel.app/cars')
-            .then(res => res.json())
-            .then(data => {
-                setCars(data);
-                setFilteredCars(data); 
+        axios.get('https://travel-ease-server-self.vercel.app/cars')
+            .then(res => {
+                setCars(res.data);
+                setFilteredCars(res.data); 
                 setLoading(false);
             })
-            .catch(err => console.error(err));
+            .catch(err => {
+                console.error("API Error:", err);
+                setLoading(false); 
+                alert("Failed to load vehicles. Please try again.");
+            });
     }, []);
+
     useEffect(() => {
         let result = [...cars];
         if (searchQuery) {
@@ -96,13 +101,14 @@ const AllVehicles = () => {
                 <button onClick={handleReset} className="btn btn-neutral">Reset Filters</button>
             </div>
 
-            {/* Grid  Display */}
+            {/* Grid Display */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filteredCars.length > 0 ? (
                     filteredCars.map(vehicle => (
                         <div key={vehicle._id} className="card bg-base-100 shadow-xl hover:shadow-2xl transition-all">
                             <figure className="px-5 pt-5">
-                                <img src={vehicle.coverImage}className="rounded-xl h-48 w-full object-cover" />
+                              
+                                <img src={vehicle.coverImage} className="rounded-xl h-48 w-full object-cover" alt={vehicle.vehicleName} />
                             </figure>
                             <div className="card-body items-center text-center">
                                 <h2 className="card-title">{vehicle.vehicleName}</h2>
@@ -114,8 +120,10 @@ const AllVehicles = () => {
                                 </div>
 
                                 <div className="card-actions w-full mt-4">
-                                    {/* View Details btn */}
-                                    <button className="btn btn-primary bg-green-500 border-0 w-full text-white">View Details</button>
+                                  
+                                    <Link to={`/vehicle/${vehicle._id}`} className="block w-full">
+                                        <button className="btn btn-primary bg-green-500 border-0 w-full text-white">View Details</button>
+                                    </Link>
                                 </div>
                             </div>
                         </div>

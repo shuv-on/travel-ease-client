@@ -6,8 +6,9 @@ import AllVehicles from "../pages/AllVehicles/AllVehicles";
 import AddVehicles from "../pages/AddVehicles/AddVehicles";
 import MyVehicles from "../pages/MyVehicles/MyVehicles";
 import MyBookings from "../pages/MyBookings/MyBookings";
+import VehicleDetails from "../pages/VehicleDetails/VehicleDetails";
 import { useAuth } from "../context/AuthContext";
-import React, { useEffect } from "react"; 
+import React, { useEffect } from "react";
 
 const ProtectedRoute = ({ children }) => {
   const { user, loading, openLoginModal } = useAuth();
@@ -21,9 +22,9 @@ const ProtectedRoute = ({ children }) => {
 
   if (loading) {
     return (
-        <div className="flex justify-center items-center min-h-[calc(100vh-200px)]">
-            <span className="loading loading-spinner loading-lg"></span>
-        </div>
+      <div className="flex justify-center items-center min-h-[calc(100vh-200px)]">
+        <span className="loading loading-spinner loading-lg"></span>
+      </div>
     );
   }
 
@@ -35,52 +36,60 @@ const ProtectedRoute = ({ children }) => {
 };
 
 export const router = createBrowserRouter([
-    {
-        path: "/",
-        element: <Root />,
-        errorElement: <ErrorPage />,
+  {
+    path: "/",
+    element: <Root />,
+    errorElement: <ErrorPage />,
 
-        children: [
+    children: [
+      {
+        index: true,
+        element: <Home />,
+      },
+      {
+        path: "/allvehicles",
+        element: (
+          <ProtectedRoute>
+            <AllVehicles />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/addvehicles",
+        element: (
+          <ProtectedRoute>
+            <AddVehicles />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/myvehicles",
+        element: (
+          <ProtectedRoute>
+            <MyVehicles />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/mybookings",
+        element: (
+          <ProtectedRoute>
+            <MyBookings />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/vehicle/:id",
+        element:(
+         <ProtectedRoute>
+          <VehicleDetails></VehicleDetails>
+          </ProtectedRoute>
+          ),
+      },
             {
-                index: true,
-                element: <Home />,
-            },
-            {
-                path: "/allvehicles",
-                element: (
-                  <ProtectedRoute>
-                    <AllVehicles />
-                  </ProtectedRoute>
-                ),
-            },
-            {
-                path: "/addvehicles",
-                element: (
-                  <ProtectedRoute>
-                    <AddVehicles />
-                  </ProtectedRoute>
-                ),
-            },
-            {
-                path: "/myvehicles",
-                element: (
-                  <ProtectedRoute>
-                    <MyVehicles />
-                  </ProtectedRoute>
-                ),
-            },
-            {
-                path: "/mybookings",
-                element: (
-                  <ProtectedRoute>
-                    <MyBookings />
-                  </ProtectedRoute>
-                ),
-            },
-            {
-                path: "*",
-                element: <ErrorPage />,
-            }
-        ]
-    }
+        path: "*",
+        element: <ErrorPage />,
+      }
+    ]
+  }
 ]);

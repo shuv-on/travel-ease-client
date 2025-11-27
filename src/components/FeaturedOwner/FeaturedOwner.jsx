@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 
 const FeaturedOwner = () => {
   const [cars, setCars] = useState([]);
 
   useEffect(() => {
-    fetch('https://travel-ease-server-self.vercel.app/cars?limit=6o')
-      .then((res) => res.json())
-      .then((data) => setCars(data))
+    axios.get('https://travel-ease-server-self.vercel.app/cars?limit=6') 
+      .then((res) => setCars(res.data))
       .catch((error) => console.error("Error fetching featured cars:", error));
   }, []);
 
@@ -34,7 +34,7 @@ const FeaturedOwner = () => {
               </figure>
               <div className="card-body">
                 <h2 className="card-title">{vehicle.vehicleName}</h2>
-                <p className='text-sm text-gray-500 font-semibold'>Owner: {vehicle.owner}</p>
+                <p className='text-sm text-gray-500 font-semibold'>Owner: {vehicle.owner || 'Anonymous'}</p> {/* Optional: Fallback if owner field missing */}
                 
                 <p>{vehicle.description.slice(0, 60)}...</p>
 

@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 
 const Dynamic = () => {
   const [vehicles, setVehicles] = useState([]);
   useEffect(() => {
-    fetch('https://travel-ease-server-self.vercel.app/cars?limit=6')
-      .then(res => res.json())
-      .then(data => setVehicles(data))
+    axios.get('https://travel-ease-server-self.vercel.app/cars?limit=6')
+      .then(res => setVehicles(res.data))
       .catch(error => console.error("Error fetching cars:", error));
   }, []);
 

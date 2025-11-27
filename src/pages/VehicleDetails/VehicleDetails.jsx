@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { motion } from 'framer-motion'; // FIXED: Import motion
-import { useSpring, animated } from 'react-spring'; // FIXED: Import React Spring
-import { format } from 'date-fns'; // FIXED: Import date-fns
+import { motion } from 'framer-motion';
+import { useSpring, animated } from 'react-spring'; 
+import { format } from 'date-fns'; 
 import Swal from 'sweetalert2';
 import { useAuth } from '../../context/AuthContext'; 
 
@@ -70,12 +70,12 @@ const VehicleDetails = () => {
             if (data.insertedId) {
                 Swal.fire({
                     title: 'Booking Confirmed!',
-                    text: `Your ride request has been submitted successfully on ${format(new Date(bookingData.bookingDate), 'MMMM dd, yyyy')}.`, // Date-fns use
+                    text: `Your ride request has been submitted successfully on ${format(new Date(bookingData.bookingDate), 'MMMM dd, yyyy')}.`, 
                     icon: 'success',
                     confirmButtonText: 'Great!',
                     confirmButtonColor: '#3085d6'
                 });
-                // Optional: setIsBooking(false); if you want to re-enable
+               
             } else {
                 setIsBooking(false);
                 Swal.fire({

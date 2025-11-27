@@ -17,7 +17,7 @@ const ProtectedRoute = ({ children }) => {
 
   useEffect(() => {
     if (!loading && !user) {
-      openLoginModal(location); 
+      openLoginModal(location);
     }
   }, [user, loading, openLoginModal, location]);
 
@@ -40,7 +40,7 @@ export const router = createBrowserRouter([
   {
     path: "/",
     element: <Root />,
-    errorElement: <ErrorPage />,
+    errorElement: <ErrorPage />, 
 
     children: [
       {
@@ -95,10 +95,10 @@ export const router = createBrowserRouter([
           </ProtectedRoute>
         ),
       },
-      {
-        path: "*",
-        element: <ErrorPage />,
-      },
     ],
+  },
+  {
+    path: "*",
+    element: <ErrorPage />,
   },
 ]);

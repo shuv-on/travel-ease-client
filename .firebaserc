@@ -1,5 +1,8 @@
 {
   "projects": {
-    "default": "travel-ease-1dfb8"
-  }
+    "default": "travel-ease-1dfb8",
+    "travel-ease": "travel-ease-1dfb8"
+  },
+  "targets": {},
+  "etags": {}
 }

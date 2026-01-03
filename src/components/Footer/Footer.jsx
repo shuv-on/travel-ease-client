@@ -1,55 +1,78 @@
 import React from 'react';
-import { Link } from 'react-router';
-
+import { FaFacebookF, FaTwitter, FaInstagram, FaLinkedinIn } from "react-icons/fa";
+import { Link } from 'react-router-dom';
 
 const Footer = () => {
     return (
-        <div className='bg-[#031931] text-white pb-5'>
-            <div className='max-w-[1200px] mx-auto p-5 flex flex-col md:flex-row gap-6'>
-                <div>
+        <footer className="bg-neutral text-neutral-content pt-16 pb-8">
+            <div className="container mx-auto px-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
                     
-                        <div className='flex items-center gap-2 '>
-                            
-                             <h1 className='text-xl font-semibold '><span className='text-green-500'>travel</span><span className='text-green-400'>Ease</span></h1>
+                    <div>
+                        <Link to="/" className='flex items-center gap-1 text-2xl font-bold mb-4 text-white'>
+                            <span className='text-green-500'>travel</span>Ease
+                        </Link>
+                        <p className="text-sm text-gray-400 leading-relaxed mb-6">
+                            TravelEase is the biggest  travel mangement company in Bandladesh. 
+                        We delivered alsmost 100+ cars in everyday.
+                        </p>
+                        <div className="flex gap-4">
+                            <a href="#" className="btn btn-circle btn-sm btn-outline text-white hover:bg-green-500 hover:border-green-500 transition-all"><FaFacebookF /></a>
+                            <a href="#" className="btn btn-circle btn-sm btn-outline text-white hover:bg-green-500 hover:border-green-500 transition-all"><FaTwitter /></a>
+                            <a href="#" className="btn btn-circle btn-sm btn-outline text-white hover:bg-green-500 hover:border-green-500 transition-all"><FaInstagram /></a>
+                            <a href="#" className="btn btn-circle btn-sm btn-outline text-white hover:bg-green-500 hover:border-green-500 transition-all"><FaLinkedinIn /></a>
                         </div>
-                 
+                    </div>
 
-                    <p>TravelEase is the biggest company in Bandladesh.  <br />
-                        We delivered alsmost 100+ cars in everyday. We <br />
-                        have 300+ engineers.
+                   
+                    <div>
+                        <h3 className="text-lg font-semibold text-white mb-4 uppercase tracking-wider">Company</h3>
+                        <ul className="space-y-2 text-sm text-gray-400">
+                            <li><Link to="/" className="hover:text-green-500 transition-colors">About Us</Link></li>
+                            <li><Link to="/allvehicles" className="hover:text-green-500 transition-colors">All Vehicles</Link></li>
+                            <li><a href="#" className="hover:text-green-500 transition-colors">Careers</a></li>
+                            <li><a href="#" className="hover:text-green-500 transition-colors">Privacy Policy</a></li>
+                        </ul>
+                    </div>
+
+                    
+                    <div>
+                        <h3 className="text-lg font-semibold text-white mb-4 uppercase tracking-wider">Support</h3>
+                        <ul className="space-y-2 text-sm text-gray-400">
+                            <li><a href="#" className="hover:text-green-500 transition-colors">Help Center</a></li>
+                            <li><a href="#" className="hover:text-green-500 transition-colors">Terms of Service</a></li>
+                            <li><a href="#" className="hover:text-green-500 transition-colors">Legal</a></li>
+                            <li><a href="#" className="hover:text-green-500 transition-colors">Contact Support</a></li>
+                        </ul>
+                    </div>
+
+                   
+                    <div>
+                        <h3 className="text-lg font-semibold text-white mb-4 uppercase tracking-wider">Contact</h3>
+                        <ul className="space-y-3 text-sm text-gray-400">
+                            <li className="flex items-start gap-3">
+                                <span>📍</span>
+                                <span>123 Travel Road, Tourism City,<br/>Dhaka 1216, Bangladesh</span>
+                            </li>
+                            <li className="flex items-center gap-3">
+                                <span>📞</span>
+                                <span>+880 123 456 7890</span>
+                            </li>
+                            <li className="flex items-center gap-3">
+                                <span>✉️</span>
+                                <span>support@travelease.com</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div className="border-t border-gray-700 pt-8 text-center">
+                    <p className="text-sm text-gray-500">
+                        © {new Date().getFullYear()} TravelEase. All rights reserved. 
                     </p>
                 </div>
-                <div className='flex flex-col gap-2'>
-                    <h1 className='tetx-xl font-bold'>About TravelEase</h1>
-                    <span className='text-sm text-gray-400'>Newsroom</span>
-                    <span className='text-sm text-gray-400'>Leadership</span>
-                    <span className='text-sm text-gray-400'>Career</span>
-                    <span className='text-sm text-gray-400'>Blog</span>
-
-                </div>
-                <div className='flex flex-col gap-2'>
-                    <h1 className='tetx-xl font-bold'>Contact with us</h1>
-                    <span className='text-sm text-gray-400'>Newsroom</span>
-                    <span className='text-sm text-gray-400'>Leadership</span>
-                    <span className='text-sm text-gray-400'>Career</span>
-                    <span className='text-sm text-gray-400'>Blog</span>
-
-                </div>
-                <div className='flex flex-col gap-2'>
-                    <h1 className='tetx-xl font-bold'>Social Links</h1>
-                    <span className='text-sm text-gray-400'>Facebook</span>
-                    <span className='text-sm text-gray-400'>LinkedIn</span>
-                    <span className='text-sm text-gray-400'>You Tube</span>
-                    <span className='text-sm text-gray-400'>X</span>
-
-                </div>
-
             </div>
-            <div className='max-w-[1200px] mx-auto text-center border-t border-gray-400'>
-                <p className='text-gray-500 p-4 w-full text-sm'>© 2025 TravelEase. All rights reserved.</p>
-            </div>
-
-        </div>
+        </footer>
     );
 };
 

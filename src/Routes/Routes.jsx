@@ -10,6 +10,9 @@ import VehicleDetails from "../pages/VehicleDetails/VehicleDetails";
 import UpdateVehicle from "../pages/UpdateVehicle/UpdateVehicle";
 import { useAuth } from "../context/AuthContext";
 import React, { useEffect } from "react";
+import Dashboard from "../pages/Dashboard/Dashboard";
+import DashboardLayout from "../Layout/DashboardLayout";
+import Profile from "../pages/Profile/Profile";
 
 const ProtectedRoute = ({ children }) => {
   const { user, loading, openLoginModal } = useAuth();
@@ -40,8 +43,7 @@ export const router = createBrowserRouter([
   {
     path: "/",
     element: <Root />,
-    errorElement: <ErrorPage />, 
-
+    errorElement: <ErrorPage />,
     children: [
       {
         index: true,
@@ -49,51 +51,50 @@ export const router = createBrowserRouter([
       },
       {
         path: "/allvehicles",
-        element: (
-          <ProtectedRoute>
-            <AllVehicles />
-          </ProtectedRoute>
-        ),
-      },
-      {
-        path: "/addvehicles",
-        element: (
-          <ProtectedRoute>
-            <AddVehicles />
-          </ProtectedRoute>
-        ),
-      },
-      {
-        path: "/myvehicles",
-        element: (
-          <ProtectedRoute>
-            <MyVehicles />
-          </ProtectedRoute>
-        ),
-      },
-      {
-        path: "/mybookings",
-        element: (
-          <ProtectedRoute>
-            <MyBookings />
-          </ProtectedRoute>
-        ),
+       
+        element: <AllVehicles />, 
       },
       {
         path: "/vehicle/:id",
-        element: (
-          <ProtectedRoute>
-            <VehicleDetails />
-          </ProtectedRoute>
-        ),
+        
+        element: <VehicleDetails />, 
+      },
+    ],
+  },
+  
+  
+  {
+    path: "/dashboard",
+    element: (
+      <ProtectedRoute>
+        <DashboardLayout /> 
+      </ProtectedRoute>
+    ),
+    errorElement: <ErrorPage />,
+    children: [
+      {
+        index: true, 
+        element: <Dashboard />,
       },
       {
-        path: "/update-vehicle/:id",
-        element: (
-          <ProtectedRoute>
-            <UpdateVehicle />
-          </ProtectedRoute>
-        ),
+        path: "addvehicle", 
+        element: <AddVehicles />,
+      },
+      {
+        path: "myvehicles",
+        element: <MyVehicles />,
+      },
+      {
+        path: "mybookings", 
+        element: <MyBookings />,
+      },
+      {
+        path: "update-vehicle/:id", 
+        element: <UpdateVehicle />,
+      },
+      {
+        path: "profile", 
+        element: <Profile/>, 
       },
     ],
   },

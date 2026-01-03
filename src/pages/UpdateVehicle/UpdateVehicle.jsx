@@ -71,7 +71,7 @@ const UpdateVehicle = () => {
                     icon: 'success',
                     confirmButtonText: 'OK'
                 });
-                navigate('/myvehicles'); 
+                navigate('/dashboard/myvehicles'); 
             }
         } catch (error) {
             console.error("Error updating vehicle:", error);

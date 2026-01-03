@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom'; 
 import { motion } from 'framer-motion';
 import { useSpring, animated } from 'react-spring'; 
 import { format } from 'date-fns'; 
 import Swal from 'sweetalert2';
 import { useAuth } from '../../context/AuthContext'; 
+import { FaArrowLeft } from 'react-icons/fa'; 
 
 const VehicleDetails = () => {
     const { id } = useParams();
+    const navigate = useNavigate(); 
     const { user } = useAuth(); 
     const [car, setCar] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -40,6 +42,10 @@ const VehicleDetails = () => {
                 text: 'You need to login first to book a ride.',
                 icon: 'warning',
                 confirmButtonText: 'Login'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    navigate('/login'); 
+                }
             });
             return;
         }
@@ -75,7 +81,7 @@ const VehicleDetails = () => {
                     confirmButtonText: 'Great!',
                     confirmButtonColor: '#3085d6'
                 });
-               
+                setIsBooking(false); 
             } else {
                 setIsBooking(false);
                 Swal.fire({
@@ -124,6 +130,17 @@ const VehicleDetails = () => {
     return (
         <div className="bg-base-200 min-h-screen py-10">
             <div className="container mx-auto px-4">
+                
+               
+                <div className="mb-6">
+                    <button 
+                        onClick={() => navigate(-1)} 
+                        className="btn btn-outline btn-sm gap-2 hover:bg-green-500 hover:text-white hover:border-green-500"
+                    >
+                        <FaArrowLeft /> Go Back
+                    </button>
+                </div>
+
                 {/* Framer Motion for card */}
                 <motion.div 
                     className="card lg:card-side bg-base-100 shadow-2xl overflow-hidden"
@@ -131,9 +148,10 @@ const VehicleDetails = () => {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, ease: "easeOut" }}
                 >
-                    <figure className="lg:w-1/2 relative">
+                    <figure className="lg:w-1/2 relative h-full">
                         <img 
                             src={car.coverImage} 
+                            alt={car.vehicleName}
                             className="w-full h-full object-cover min-h-[400px]" 
                         />
                     </figure>
@@ -169,8 +187,8 @@ const VehicleDetails = () => {
                             >
                                 {isBooking ? (
                                     <span className="flex items-center justify-center">
-                                        <span className=" mr-2"></span>
-                                        Booked...
+                                        <span className="loading loading-spinner loading-sm mr-2"></span>
+                                        Processing...
                                     </span>
                                 ) : (
                                     'Book This Ride Now'

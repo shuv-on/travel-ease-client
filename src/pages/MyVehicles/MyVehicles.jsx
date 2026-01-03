@@ -92,7 +92,7 @@ const MyVehicles = () => {
                                     <Link to={`/vehicle/${vehicle._id}`} className="flex-1">
                                         <button className="btn btn-primary bg-blue-500 border-0 text-white">View Details</button>
                                     </Link>
-                                    <Link to={`/update-vehicle/${vehicle._id}`} className="flex-1">
+                                    <Link to={`/dashboard/update-vehicle/${vehicle._id}`} className="flex-1">
                                         <button className="btn btn-secondary bg-yellow-500 border-0 text-white">Update</button>
                                     </Link>
                                     <button 

@@ -3,6 +3,8 @@ import { Link, NavLink, Outlet } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { FaHome, FaCar, FaUser, FaCalendarAlt, FaSignOutAlt, FaPlusCircle, FaTachometerAlt, FaTimes } from 'react-icons/fa';
 
+import DynamicTitle  from '../components/DynamicTitle/DynamicTitle';
+
 const DashboardLayout = () => {
     const { user, logout } = useAuth();
 
@@ -70,6 +72,7 @@ const DashboardLayout = () => {
 
     return (
         <div className="drawer lg:drawer-open">
+            <DynamicTitle key={location.pathname} />
             <input id="dashboard-drawer" type="checkbox" className="drawer-toggle" />
             
            

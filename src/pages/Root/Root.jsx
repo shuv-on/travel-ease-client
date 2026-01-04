@@ -4,6 +4,7 @@ import React from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import NavBar from '../../components/NavBar/NavBar';
 import Footer from '../../components/Footer/Footer';
+import DynamicTitle from '../../components/DynamicTitle/DynamicTitle';
 
 
 const Root = () => {
@@ -11,6 +12,7 @@ const Root = () => {
     const showFooter = ['/', '/allvehicles', '/addvehicles', '/myvehicles', '/mybookings'].includes(location.pathname);
     return (
         <div>
+            <DynamicTitle key={location.pathname} />
             <NavBar></NavBar>
             <Outlet></Outlet>
            {showFooter && <Footer></Footer>}

@@ -110,7 +110,7 @@ const MyVehicles = () => {
                 <div className="text-center text-gray-500 py-10">
                     <h3 className="text-xl mb-4">No vehicles found.</h3>
                     <p className="text-sm">Add your first vehicle today!</p>
-                    <Link to="/addvehicles" className="btn btn-primary bg-green-500 border-0 mt-4">Add Vehicle</Link>
+                    <Link to="/dashboard/addvehicle" className="btn btn-primary bg-green-500 border-0 mt-4">Add Vehicle</Link>
                 </div>
             )}
         </div>

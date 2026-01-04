@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import { FaUser, FaCar, FaCalendarCheck, FaEdit } from 'react-icons/fa';
+import { FaUser, FaCar, FaCalendarCheck, FaEdit, FaChartBar } from 'react-icons/fa';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 const Dashboard = () => {
     const { user } = useAuth();
@@ -10,23 +11,48 @@ const Dashboard = () => {
         bookingCount: 0,
         vehicleCount: 0
     });
+    const [chartData, setChartData] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         if (user?.email) {
             const fetchData = async () => {
                 try {
-                   // count bookings
+                    setLoading(true);
+
+                    
                     const bookingsRes = await axios.get(`https://travel-ease-server-self.vercel.app/bookings?email=${user.email}`);
                     
-                    // count vehicles
-                    const vehiclesRes = await axios.get(`https://travel-ease-server-self.vercel.app/cars/user/${user.email}`);
+                  
+                    const vehiclesRes = await axios.get(`https://travel-ease-server-self.vercel.app/cars`);
 
+                 
+                    const myBookings = bookingsRes.data.filter(b => 
+                        (b.userEmail && b.userEmail.toLowerCase() === user.email.toLowerCase()) || 
+                        (b.email && b.email.toLowerCase() === user.email.toLowerCase())
+                    );
+
+                  
+                    const myVehicles = vehiclesRes.data.filter(v => 
+                        (v.userEmail && v.userEmail.toLowerCase() === user.email.toLowerCase()) ||
+                        (v.email && v.email.toLowerCase() === user.email.toLowerCase())
+                    );
+
+                    
                     setStats({
-                        bookingCount: bookingsRes.data.length,
-                        vehicleCount: vehiclesRes.data.length
+                        bookingCount: myBookings.length,
+                        vehicleCount: myVehicles.length
                     });
+
+                    
+                    const dataForChart = myBookings.slice(0, 5).map(booking => ({
+                        name: booking.vehicleName ? (booking.vehicleName.length > 10 ? booking.vehicleName.slice(0, 10) + '..' : booking.vehicleName) : 'Ride',
+                        price: booking.pricePerDay ? parseInt(booking.pricePerDay) : 0
+                    }));
+                    
+                    setChartData(dataForChart);
                     setLoading(false);
+
                 } catch (error) {
                     console.error("Error fetching dashboard data:", error);
                     setLoading(false);
@@ -56,7 +82,7 @@ const Dashboard = () => {
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 
-                {/* Profile*/}
+                {/* Profile  */}
                 <div className="card bg-base-200 shadow-xl h-fit">
                     <div className="card-body items-center text-center">
                         <div className="avatar mb-4">
@@ -65,7 +91,7 @@ const Dashboard = () => {
                             </div>
                         </div>
                         <h2 className="card-title text-2xl">{user?.displayName}</h2>
-                        <p className="text-gray-500">{user?.email}</p>
+                        <p className="text-gray-500 break-all">{user?.email}</p>
                         
                         <div className="divider"></div>
                         
@@ -75,27 +101,22 @@ const Dashboard = () => {
                                 <span className="font-semibold">User ID:</span> 
                                 <span className="text-xs opacity-70 truncate">{user?.uid}</span>
                             </div>
-                            <div className="flex items-center gap-3">
-                                <FaCalendarCheck className="text-green-500" />
-                                <span className="font-semibold">Joined:</span> 
-                                <span className="text-sm">{user?.metadata?.creationTime ? new Date(user.metadata.creationTime).toDateString() : 'N/A'}</span>
-                            </div>
                         </div>
                     </div>
                 </div>
 
-                {/* Stats*/}
+               
                 <div className="lg:col-span-2 space-y-8">
                     
-                    {/* Stats box */}
+                    {/* Stats Cards */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        
                         <div className="stats shadow bg-gradient-to-r from-blue-500 to-cyan-500 text-white">
                             <div className="stat">
                                 <div className="stat-figure text-blue-100">
                                     <FaCalendarCheck className="text-4xl opacity-80" />
                                 </div>
                                 <div className="stat-title text-blue-100">Total Bookings</div>
+                                {/* count bookings*/}
                                 <div className="stat-value">{stats.bookingCount}</div>
                                 <div className="stat-desc text-blue-100">Trips scheduled</div>
                                 <div className="stat-actions mt-2">
@@ -104,7 +125,6 @@ const Dashboard = () => {
                             </div>
                         </div>
 
-                        
                         <div className="stats shadow bg-gradient-to-r from-orange-500 to-yellow-500 text-white">
                             <div className="stat">
                                 <div className="stat-figure text-orange-100">
@@ -120,7 +140,37 @@ const Dashboard = () => {
                         </div>
                     </div>
 
-                  
+                    {/* Chart */}
+                    <div className="card bg-base-100 shadow-xl border border-base-200">
+                        <div className="card-body">
+                            <div className="flex items-center gap-2 mb-4">
+                                <FaChartBar className="text-green-500 text-xl" />
+                                <h3 className="card-title">Booking Cost Analysis</h3>
+                            </div>
+                            
+                            <div className="h-[300px] w-full">
+                                {chartData.length > 0 ? (
+                                    <ResponsiveContainer width="100%" height="100%">
+                                        <BarChart data={chartData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+                                            <CartesianGrid strokeDasharray="3 3" />
+                                            <XAxis dataKey="name" />
+                                            <YAxis />
+                                            <Tooltip />
+                                            <Legend />
+                                            <Bar dataKey="price" fill="#10B981" name="Cost ($)" barSize={50} radius={[4, 4, 0, 0]} />
+                                        </BarChart>
+                                    </ResponsiveContainer>
+                                ) : (
+                                    <div className="flex flex-col justify-center items-center h-full text-gray-400">
+                                        <p>No booking data available for chart.</p>
+                                        <Link to="/allvehicles" className="btn btn-sm btn-link">Book a ride now</Link>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+
+               
                     <div className="card bg-base-100 shadow-xl border border-base-200">
                         <div className="card-body">
                             <h3 className="card-title mb-4">Quick Actions</h3>
@@ -128,22 +178,12 @@ const Dashboard = () => {
                                 <Link to="/dashboard/addvehicle" className="btn btn-outline btn-success gap-2">
                                     <FaCar /> Add New Vehicle
                                 </Link>
-                                <Link to="/dashboard/allvehicles" className="btn btn-outline btn-info gap-2">
+                                <Link to="/allvehicles" className="btn btn-outline btn-info gap-2">
                                     <FaCalendarCheck /> Book a Ride
                                 </Link>
                             </div>
                         </div>
                     </div>
-
-                    {/* Tips */}
-                    <div className="alert alert-info bg-indigo-100 border-indigo-200 text-indigo-800">
-                        <FaEdit />
-                        <div>
-                            <h3 className="font-bold">Did you know?</h3>
-                            <div className="text-xs">You can update your listed vehicles' price and availability from the "My Vehicles" page anytime!</div>
-                        </div>
-                    </div>
-
                 </div>
             </div>
         </div>

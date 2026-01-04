@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Link, NavLink, Outlet } from 'react-router-dom';
+import { Link, NavLink, Outlet, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { FaHome, FaCar, FaUser, FaCalendarAlt, FaSignOutAlt, FaPlusCircle, FaTachometerAlt, FaTimes } from 'react-icons/fa';
 
@@ -7,6 +7,7 @@ import DynamicTitle  from '../components/DynamicTitle/DynamicTitle';
 
 const DashboardLayout = () => {
     const { user, logout } = useAuth();
+    const location = useLocation();
 
     useEffect(() => {
         const savedTheme = localStorage.getItem('theme') || 'light';

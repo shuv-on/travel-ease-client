@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { FaUser, FaCar, FaCalendarCheck, FaEdit, FaChartBar } from 'react-icons/fa';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import DynamicTitle from '../../components/DynamicTitle/DynamicTitle';
 
 const Dashboard = () => {
+    const location = useLocation();
     const { user } = useAuth();
     const [stats, setStats] = useState({
         bookingCount: 0,
@@ -72,7 +74,7 @@ const Dashboard = () => {
 
     return (
         <div className="container mx-auto px-4 py-10 min-h-screen bg-base-100">
-           
+            <DynamicTitle key={location.pathname} />
             <div className="mb-10">
                 <h2 className="text-3xl font-bold">
                     Welcome back, <span className="text-green-500">{user?.displayName}!</span>

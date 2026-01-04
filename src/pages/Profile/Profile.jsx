@@ -2,8 +2,11 @@ import React, { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { updateProfile } from 'firebase/auth';
 import Swal from 'sweetalert2'; 
+import { useLocation } from 'react-router-dom';
+import DynamicTitle from '../../components/DynamicTitle/DynamicTitle';
 
 const Profile = () => {
+    const location = useLocation();
     const { user } = useAuth();
     const [loading, setLoading] = useState(false);
     
@@ -52,6 +55,7 @@ const Profile = () => {
 
     return (
         <div className="container mx-auto p-4 max-w-4xl">
+             <DynamicTitle key={location.pathname} />
             <h2 className="text-3xl font-bold mb-6 text-center">My Profile</h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">

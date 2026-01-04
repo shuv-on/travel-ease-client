@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import axios from 'axios';
 import Swal from 'sweetalert2';
+import DynamicTitle from '../../components/DynamicTitle/DynamicTitle';
 
 const MyVehicles = () => {
+     const location = useLocation();
     const { user } = useAuth();
     const [myVehicles, setMyVehicles] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -66,6 +68,7 @@ const MyVehicles = () => {
 
     return (
         <div className="container mx-auto px-4 py-10">
+             <DynamicTitle key={location.pathname} />
             <h2 className="text-3xl font-bold text-center mb-8">My Vehicles</h2>
             
             {myVehicles.length > 0 ? (

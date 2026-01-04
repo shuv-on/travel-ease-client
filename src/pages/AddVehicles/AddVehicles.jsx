@@ -2,8 +2,11 @@ import React, { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import Swal from 'sweetalert2';
 import axios from 'axios';
+import DynamicTitle from '../../components/DynamicTitle/DynamicTitle';
+import { useLocation } from 'react-router-dom';
 
 const AddVehicles = () => {
+     const location = useLocation();
     const { user } = useAuth();
     const [formData, setFormData] = useState({
         vehicleName: '',
@@ -76,6 +79,7 @@ const AddVehicles = () => {
 
     return (
         <div className="container mx-auto px-4 py-10">
+             <DynamicTitle key={location.pathname} />
             <h2 className="text-3xl font-bold text-center mb-8">Add New Vehicle</h2>
             <form onSubmit={handleSubmit} className="max-w-md mx-auto bg-base-100 p-6 rounded-lg shadow-xl">
                 {/* Vehicle Name */}

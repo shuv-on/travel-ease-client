@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../../context/AuthContext'; 
 import Swal from 'sweetalert2';
-
+import DynamicTitle from '../../components/DynamicTitle/DynamicTitle';
+import { useLocation } from 'react-router-dom';
 const MyBookings = () => {
+     const location = useLocation();
     const { user } = useAuth(); 
     const [bookings, setBookings] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -85,6 +87,7 @@ const MyBookings = () => {
 
     return (
         <div className="container mx-auto px-4 py-10 min-h-screen">
+             <DynamicTitle key={location.pathname} />
             <h2 className="text-3xl font-bold text-center mb-8">My Bookings</h2>
             
             {bookings.length > 0 ? (

@@ -17,7 +17,13 @@
 - Firebase
 - Vercel for backend hosting
 - Using Axios for api calls 
-## Packages includes:
-- Framer motion
-- React spring
-- Date-fns
+# NPM Packages
+
+The project utilizes several key packages to enhance functionality:
+
+- **react-helmet-async** 
+- **framer-motion** 
+- **react-datepicker** 
+- **sweetalert2** 
+- **date-fns** 
+- **react-icons** 
